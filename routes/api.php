@@ -1,7 +1,8 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Api\V1\ItemController as ItemControllerV1;
+use Api\V1\UserController as UserControllerV1;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,7 +14,17 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+Route::post('sign-in', 'AuthController@signIn');
+Route::post('sign-up', 'AuthController@signUp');
+Route::post('reset-password', 'AuthController@passwordRecovery');
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::middleware(['auth:api'])->prefix('v1')->group(
+    function () {
+        Route::resources(
+            [
+                'users' => UserControllerV1::class,
+                'items' => ItemControllerV1::class
+            ]
+        );
+    }
+);
