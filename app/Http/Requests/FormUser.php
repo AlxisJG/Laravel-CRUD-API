@@ -3,9 +3,37 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Validation\ValidationException;
 
 class FormUser extends FormRequest
 {
+    public $errors = [];
+
+    /**
+     * Verifica si hay errores en la validacion
+     *
+     * @return bool
+     */
+    public function hasErrors()
+    {
+        return (bool) $this->errors;
+    }
+
+    /**
+     * Devuelve un arreglo de errores
+     *
+     * @return Array $errors
+     */
+    public function getErrors()
+    {
+        return $this->errors;
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        $this->errors = $validator->errors()->getMessages();
+    }
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -13,7 +41,7 @@ class FormUser extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +52,12 @@ class FormUser extends FormRequest
     public function rules()
     {
         return [
-            //
+            'name' => 'required',
+            'email' => 'required|unique:users|email:rfc',
+            'phone' => 'numeric',
+            'birth_date' => 'date',
+            'username' => 'required|unique:users',
+            'password' => 'required'
         ];
     }
 }
