@@ -16,12 +16,6 @@ class ItemCollection extends ResourceCollection
     {
         return [
             'data' => $this->collection,
-            'metadata' => [
-                'count' => $this->count(),
-                'total' => $this->total(),
-                'prev-link'  => $this->previousPageUrl(),
-                'next-link'  => $this->nextPageUrl(),
-            ],
             'success' => true
         ];
     }

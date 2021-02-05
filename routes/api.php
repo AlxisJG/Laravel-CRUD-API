@@ -20,7 +20,7 @@ Route::post('reset-password', 'AuthController@passwordRecovery');
 
 Route::middleware(['auth:api'])->prefix('v1')->group(
     function () {
-        Route::resources(
+        Route::apiResources(
             [
                 'users' => UserControllerV1::class,
                 'items' => ItemControllerV1::class

@@ -16,7 +16,7 @@ class UserController extends Controller
 {
     /**
     * @OA\Get(
-    *     path="/api/users",
+    *     path="/api/v1/users",
     *     summary="Mostrar usuarios",
     *     @OA\Response(
     *         response=200,

@@ -65,7 +65,7 @@ class AuthController extends Controller
             $user->save();
             return response()->json(
                 [
-                    'message' => 'Usuario creado. Hemos enviado un correo a tu email para confirmar tu cuenta',
+                    'message' => 'Usuario creado.',
                     'success' => true
                 ],
                 201

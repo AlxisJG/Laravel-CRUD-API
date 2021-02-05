@@ -45,12 +45,13 @@ class ItemCRUDTest extends PassportTestCase
     }
 
     /*
-     * Listamos items.
+     * Buscamos item por sku.
      *
      * @return void
      */
     public function testGetItemBySku()
     {
+        $this->withoutExceptionHandling();
         factory(Item::class, 1)->create();
         $response = $this->get('/api/v1/items?sky=ABC123456', $this->headers);
 
@@ -58,7 +59,7 @@ class ItemCRUDTest extends PassportTestCase
     }
 
     /*
-     * Listamos items.
+     * Listamos items paginado.
      *
      * @return void
      */
@@ -71,7 +72,7 @@ class ItemCRUDTest extends PassportTestCase
     }
 
     /*
-     * Listamos items.
+     * Mostrar un item por id.
      *
      * @return void
      */
@@ -84,7 +85,7 @@ class ItemCRUDTest extends PassportTestCase
     }
 
     /*
-     * Listamos items.
+     * Probamos cuando enviamos un id incorrecto o no existente.
      *
      * @return void
      */

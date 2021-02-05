@@ -9,9 +9,24 @@ use Illuminate\Http\Request;
 use App\Http\Resources\ItemCollection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Item;
+use Illuminate\Support\Facades\Storage;
 
 class ItemController extends Controller
 {
+    /**
+    * @OA\Get(
+    *     path="/api/v1/items",
+    *     summary="Mostrar productos",
+    *     @OA\Response(
+    *         response=201,
+    *         description="Mostrar todos los productos."
+    *     ),
+    *     @OA\Response(
+    *         response=404,
+    *         description="No hemos podido encontrar el item solicitado."
+    *     )
+    * )
+    */
     /**
      * Se busca y retorna lo usuarios paginados
      *
@@ -19,27 +34,25 @@ class ItemController extends Controller
      */
     public function index(Request $request)
     {
-        $items = Item::query();
-        foreach ($request->query() as $key => $value) {
-            //TODO Make It case insensible
+        $query = $request->query();
+        $items = Item::latest();
+        foreach ($query as $key => $value) {
             switch ($key) {
                 case 'sku':
-                    $items->where('sku', $value);
+                    $items->where('sku', "LIKE", "%{$value}%");
                     break;
                 case 'name':
-                    $items->where('name', $value);
+                    $items->where('name', "LIKE", "%{$value}%");
                     break;
             }
         }
 
-        if ($items->count() == 1) {
-            return (new ItemResource($items->first()))->response()->setStatusCode(201);
-        } elseif ($items->count() == 0) {
-            return response('No pudimos encontrar el item')->setStatusCode(404);
+        if ($query && $items->count() == 0) {
+            return response('No pudimos encontrar items con el query insertado')->setStatusCode(404);
         }
+        $result = $items->paginate(10);
 
-        $items = Item::paginate(10);
-        return (new ItemCollection($items))->response()->setStatusCode(201);
+        return (new ItemCollection($result))->response()->setStatusCode(201);
     }
 
     /**
@@ -51,7 +64,7 @@ class ItemController extends Controller
             $item = new ItemResource(Item::findOrFail($id));
             return response()->json(['data' => $item, 'success' => true], 201);
         } catch (ModelNotFoundException $e) {
-            return response()->json($e->getMessage(), 404);
+            return response()->json(['message' => 'No pudimos encontrar el item', 'success' => false], 404);
         } catch (\Exception $e) {
             return response()->json($e->getMessage(), $e->getCode());
         }
@@ -72,8 +85,13 @@ class ItemController extends Controller
                     200
                 );
             }
-            $itemCreated = Item::create($itemRequest->all());
-            $itemResult = new ItemResource($itemCreated);
+            $item = new Item($itemRequest->all());
+            if ($itemRequest->hasFile('image')) {
+                $path = $itemRequest->file('image')->store('imgs');
+                $item->image = $path;
+            }
+
+            $itemResult = new ItemResource($item);
             return response()->json(['data' => $itemResult, 'success' => true], 201);
         } catch (\Exception $e) {
             return response()->json($e->getMessage(), $e->getCode());
@@ -98,9 +116,9 @@ class ItemController extends Controller
             $item = Item::findOrFail($id);
             $item->update($itemRequest->all());
             $itemResult = new ItemResource($item);
-            return $itemResult->response()->setStatusCode(201);
+            return response()->json(['data' => $itemResult, 'success' => true], 201);
         } catch (ModelNotFoundException $e) {
-            return response()->json($e->getMessage(), 404);
+            return response()->json(['message' => 'No pudimos encontrar el item', 'success' => false], 404);
         } catch (\Exception $e) {
             return response()->json($e->getMessage(), $e->getCode());
         }
@@ -109,8 +127,16 @@ class ItemController extends Controller
     /**
      * @return JsonContent
      */
-    public function delete()
+    public function destroy($id)
     {
-
+        try {
+            $item = Item::findOrFail($id);
+            $item->delete();
+            return response()->json(['message' => 'Hemos borrado el item', 'success' => true], 201);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['message' => 'No pudimos encontrar el item', 'success' => false], 404);
+        } catch (\Exception $e) {
+            return response()->json($e->getMessage(), $e->getCode());
+        }
     }
 }
