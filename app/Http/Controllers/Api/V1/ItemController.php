@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\FormItem;
 use App\Http\Resources\ItemResource;
+use Illuminate\Http\Request;
+use App\Http\Resources\ItemCollection;
 use App\Item;
 
 class ItemController extends Controller
@@ -14,10 +16,10 @@ class ItemController extends Controller
      *
      * @return ItemResource[]
      */
-    public function index()
+    public function index(Request $request)
     {
-        $items = Item::paginate(10)->get();
-        return ItemResource::collection($items);
+        $items = Item::paginate(10);
+        return response()->json(new ItemCollection($items), 201);
     }
 
     /**
@@ -27,7 +29,7 @@ class ItemController extends Controller
     {
         try {
             $item = new ItemResource(Item::findOrFail($id));
-            return $item;
+            return response()->json(['data' => $item, 'success' => true], 201);
         } catch (\Exception $e) {
             return response()->json($e->getMessage(), $e->getCode());
         }
@@ -39,10 +41,18 @@ class ItemController extends Controller
     public function store(FormItem $itemRequest)
     {
         try {
-            $itemRequest->validate();
+            if ($itemRequest->hasErrors()) {
+                return response()->json(
+                    [
+                        'errors' => $itemRequest->getErrors(),
+                        'success' => false
+                    ],
+                    200
+                );
+            }
             $itemCreated = Item::create($itemRequest->all());
             $itemResult = new ItemResource($itemCreated);
-            return $itemResult;
+            return response()->json(['data' => $itemResult, 'success' => true], 201);
         } catch (\Exception $e) {
             return response()->json($e->getMessage(), $e->getCode());
         }
