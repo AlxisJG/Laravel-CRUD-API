@@ -51,10 +51,15 @@ class FormItem extends FormRequest
      */
     public function rules()
     {
+        if ($this->getMethod() == 'PUT') {
+            return [
+                //
+            ];
+        }
         return [
             'name' => 'required',
-            'quantity' => 'required',
-            'price' => 'required'
+            'quantity' => 'required|numeric',
+            'price' => 'required|numeric'
         ];
     }
 }

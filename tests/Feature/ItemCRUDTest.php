@@ -26,6 +26,37 @@ class ItemCRUDTest extends PassportTestCase
         $response->assertStatus(201);
     }
 
+    /**
+     * Actualizamos un item.
+     *
+     * @return void
+     */
+    public function testUpdateItem()
+    {
+        factory(Item::class, 1)->create();
+        $response = $this->put('/api/v1/items/1', [
+            'name' => 'Producto Bueno',
+            'price' => 300.50,
+            'sku' => '0002245121',
+            'quantity' => 2
+        ], $this->headers);
+
+        $response->assertStatus(201);
+    }
+
+    /*
+     * Listamos items.
+     *
+     * @return void
+     */
+    public function testGetItemBySku()
+    {
+        factory(Item::class, 1)->create();
+        $response = $this->get('/api/v1/items?sky=ABC123456', $this->headers);
+
+        $response->assertStatus(201);
+    }
+
     /*
      * Listamos items.
      *
@@ -33,11 +64,35 @@ class ItemCRUDTest extends PassportTestCase
      */
     public function testGetItemsPaginated()
     {
-        factory(Item::class, 3)->create();
+        factory(Item::class, 20)->create();
         $response = $this->get('/api/v1/items', $this->headers);
 
-        dd($response->getContent());
+        $response->assertStatus(201);
+    }
+
+    /*
+     * Listamos items.
+     *
+     * @return void
+     */
+    public function testGetItemById()
+    {
+        factory(Item::class, 1)->create();
+        $response = $this->get('/api/v1/items/1', $this->headers);
 
         $response->assertStatus(201);
+    }
+
+    /*
+     * Listamos items.
+     *
+     * @return void
+     */
+    public function testWrongIdGettingItemById()
+    {
+        factory(Item::class, 1)->create();
+        $response = $this->get('/api/v1/items/4', $this->headers);
+
+        $response->assertStatus(404);
     }
 }

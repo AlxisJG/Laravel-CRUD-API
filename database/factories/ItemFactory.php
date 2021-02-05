@@ -10,6 +10,7 @@ $factory->define(Item::class, function (Faker $faker) {
         'name' => $faker->name,
         'price' => 500.48,
         'quantity' => 3,
+        'sku' => 'ABC123456',
         'description' => $faker->text
     ];
 });
