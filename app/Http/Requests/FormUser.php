@@ -51,13 +51,23 @@ class FormUser extends FormRequest
      */
     public function rules()
     {
+        if ($this->getMethod() == 'PUT') {
+            return [
+                'email' => 'unique:users|email:rfc',
+                'phone' => 'numeric',
+                'birth_date' => 'date',
+                'username' => 'unique:users',
+                'password' => 'string|confirmed'
+
+            ];
+        }
         return [
             'name' => 'required',
             'email' => 'required|unique:users|email:rfc',
             'phone' => 'numeric',
             'birth_date' => 'date',
             'username' => 'required|unique:users',
-            'password' => 'required'
+            'password' => 'required|string|confirmed'
         ];
     }
 }

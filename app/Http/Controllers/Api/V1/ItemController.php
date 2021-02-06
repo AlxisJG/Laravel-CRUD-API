@@ -114,7 +114,12 @@ class ItemController extends Controller
                 );
             }
             $item = Item::findOrFail($id);
-            $item->update($itemRequest->all());
+            $item->fill($itemRequest->all());
+            if ($itemRequest->hasFile('image')) {
+                $path = $itemRequest->file('image')->store('imgs');
+                $item->image = $path;
+            }
+            $item->save();
             $itemResult = new ItemResource($item);
             return response()->json(['data' => $itemResult, 'success' => true], 201);
         } catch (ModelNotFoundException $e) {
