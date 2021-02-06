@@ -8,6 +8,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use App\Http\Requests\ResetPasswordRequest;
+use Illuminate\Support\Facades\Password;
+use App\ApiCode;
 
 class AuthController extends Controller
 {
@@ -63,6 +66,7 @@ class AuthController extends Controller
             $user = new User($userRequest->all());
             $user->password = Hash::make($userRequest->input('password'));
             $user->save();
+            $user->sendEmailVerificationNotification();
             return response()->json(
                 [
                     'message' => 'Usuario creado.',
@@ -77,17 +81,49 @@ class AuthController extends Controller
     }
 
     /**
-     * Se recupera la password
+     * Verify email
+     *
+     * @param $user_id
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function recoveryPassword(Request $request)
+    public function verify($user_id, Request $request)
     {
-        try {
-            $userExist = (bool) User::where('email', $request->input('email'))->count();
-            if (!$userExist) {
-                throw new \Exception('No encontramos un usuario con el correo que nos ingresa', 404);
-            }
-        } catch (\Exception $e) {
-            return response()->json($e->getMessage(), $e->getCode());
+        if (!$request->hasValidSignature()) {
+            return $this->respondUnAuthorizedRequest(ApiCode::INVALID_EMAIL_VERIFICATION_URL);
         }
+
+        $user = User::findOrFail($user_id);
+
+        if (!$user->hasVerifiedEmail()) {
+            $user->markEmailAsVerified();
+        }
+
+        return redirect()->to('/');
+    }
+
+    public function forgot()
+    {
+        request()->validate(['email' => 'required|email']);
+
+        $status = Password::sendResetLink(request()->only('email'));
+        return $status === Password::RESET_LINK_SENT ?
+            response()->json(['message' => 'Te hemos enviado la recuperación de tu contraseña a tu correo', 'success' => true], 201)
+            : response()->json(['message' => __($status), 'success' => true], 200);
+    }
+
+
+    public function reset(ResetPasswordRequest $request)
+    {
+        $reset_password_status = Password::reset($request->validated(), function ($user, $password) {
+            $user->password = $password;
+            $user->save();
+        });
+
+        if ($reset_password_status == Password::INVALID_TOKEN) {
+            return response()->json(['message' => __($reset_password_status)], ApiCode::INVALID_RESET_PASSWORD_TOKEN);
+        }
+
+        return response()->json(['message' => "La contraseña ha sido cambiada exitosamente"], 201);
     }
 }
