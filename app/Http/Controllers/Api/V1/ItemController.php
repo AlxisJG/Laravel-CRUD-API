@@ -17,6 +17,7 @@ class ItemController extends Controller
     * @OA\Get(
     *     path="/api/v1/items",
     *     summary="Mostrar productos",
+    *     tags={"Item Module"},
     *     @OA\Response(
     *         response=201,
     *         description="Mostrar todos los productos."
@@ -56,6 +57,21 @@ class ItemController extends Controller
     }
 
     /**
+    * @OA\Get(
+    *     path="/api/v1/items/:id",
+    *     summary="Mostrar un producto por id",
+    *     tags={"Item Module"},
+    *     @OA\Response(
+    *         response=201,
+    *         description="Se muestra un producto por id."
+    *     ),
+    *     @OA\Response(
+    *         response=404,
+    *         description="No hemos podido encontrar el item solicitado."
+    *     )
+    * )
+    */
+    /**
      * @return ItemResource
      */
     public function show($id)
@@ -70,6 +86,21 @@ class ItemController extends Controller
         }
     }
 
+    /**
+    * @OA\Post(
+    *     path="/api/v1/items",
+    *     summary="Crear un producto",
+    *     tags={"Item Module"},
+    *     @OA\Response(
+    *         response=201,
+    *         description="Se crea un producto."
+    *     ),
+    *     @OA\Response(
+    *         response=200,
+    *         description="Hubo un problema en el request."
+    *     )
+    * )
+    */
     /**
      * @return ItemResource
      */
@@ -98,6 +129,21 @@ class ItemController extends Controller
         }
     }
 
+    /**
+    * @OA\Put(
+    *     path="/api/v1/items/:id",
+    *     summary="Actualiza un producto",
+    *     tags={"Item Module"},
+    *     @OA\Response(
+    *         response=201,
+    *         description="Se actualiza el producto."
+    *     ),
+    *     @OA\Response(
+    *         response=200,
+    *         description="Hubo un problema en el request."
+    *     )
+    * )
+    */
     /**
      * @return ItemResource
      */
@@ -129,6 +175,21 @@ class ItemController extends Controller
         }
     }
 
+    /**
+    * @OA\Delete(
+    *     path="/api/v1/items/:id",
+    *     summary="Elimina un producto",
+    *     tags={"Item Module"},
+    *     @OA\Response(
+    *         response=201,
+    *         description="Se Elimina el producto."
+    *     ),
+    *     @OA\Response(
+    *         response=200,
+    *         description="Hubo un problema en el request."
+    *     )
+    * )
+    */
     /**
      * @return JsonContent
      */

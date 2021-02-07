@@ -11,16 +11,12 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\User;
 use Illuminate\Support\Facades\Hash;
 
-/**
-* @OA\Info(title="API Usuarios", version="1.0")
-*
-* @OA\Server(url="http://localhost:5000")
-*/
 class UserController extends Controller
 {
     /**
     * @OA\Get(
     *     path="/api/v1/users",
+    *     tags={"User Module"},
     *     summary="Mostrar usuarios",
     *     @OA\Response(
     *         response=200,
@@ -41,6 +37,7 @@ class UserController extends Controller
     /**
     * @OA\Get(
     *     path="/api/v1/users/:id",
+    *     tags={"User Module"},
     *     summary="Muestra un usuario por id",
     *     @OA\Response(
     *         response=200,
@@ -64,6 +61,21 @@ class UserController extends Controller
         }
     }
 
+    /**
+    * @OA\Post(
+    *     path="/api/v1/users",
+    *     tags={"User Module"},
+    *     summary="Se crea un usuario",
+    *     @OA\Response(
+    *         response=200,
+    *         description="Creación de un usuario."
+    *     ),
+    *     @OA\Response(
+    *         response="default",
+    *         description="Ha ocurrido un error."
+    *     )
+    * )
+    */
     public function store(FormUser $userRequest)
     {
         try {
@@ -93,6 +105,21 @@ class UserController extends Controller
         }
     }
 
+    /**
+    * @OA\Put(
+    *     path="/api/v1/users/:id",
+    *     tags={"User Module"},
+    *     summary="Actualizamos un usuario",
+    *     @OA\Response(
+    *         response=200,
+    *         description="Actualiza un usuario."
+    *     ),
+    *     @OA\Response(
+    *         response="default",
+    *         description="Ha ocurrido un error."
+    *     )
+    * )
+    */
     public function update(FormUser $userRequest, $id)
     {
         try {
@@ -116,6 +143,21 @@ class UserController extends Controller
         }
     }
 
+    /**
+    * @OA\Delete(
+    *     path="/api/v1/users/:id",
+    *     tags={"User Module"},
+    *     summary="Eliminamos un usuario por id",
+    *     @OA\Response(
+    *         response=200,
+    *         description="Elimina un usuario."
+    *     ),
+    *     @OA\Response(
+    *         response="default",
+    *         description="Ha ocurrido un error."
+    *     )
+    * )
+    */
     /**
      * @return JsonContent
      */

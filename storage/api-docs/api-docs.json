@@ -1,7 +1,7 @@
 {
     "openapi": "3.0.0",
     "info": {
-        "title": "API Usuarios",
+        "title": "API Laravel CRUD",
         "version": "1.0"
     },
     "servers": [
@@ -10,13 +10,183 @@
         }
     ],
     "paths": {
-        "/api/users": {
+        "/api/v1/items": {
             "get": {
+                "tags": [
+                    "Item Module"
+                ],
+                "summary": "Mostrar productos",
+                "responses": {
+                    "201": {
+                        "description": "Mostrar todos los productos."
+                    },
+                    "404": {
+                        "description": "No hemos podido encontrar el item solicitado."
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Item Module"
+                ],
+                "summary": "Crear un producto",
+                "responses": {
+                    "201": {
+                        "description": "Se crea un producto."
+                    },
+                    "200": {
+                        "description": "Hubo un problema en el request."
+                    }
+                }
+            }
+        },
+        "/api/v1/items/:id": {
+            "get": {
+                "tags": [
+                    "Item Module"
+                ],
+                "summary": "Mostrar un producto por id",
+                "responses": {
+                    "201": {
+                        "description": "Se muestra un producto por id."
+                    },
+                    "404": {
+                        "description": "No hemos podido encontrar el item solicitado."
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Item Module"
+                ],
+                "summary": "Actualiza un producto",
+                "responses": {
+                    "201": {
+                        "description": "Se actualiza el producto."
+                    },
+                    "200": {
+                        "description": "Hubo un problema en el request."
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Item Module"
+                ],
+                "summary": "Elimina un producto",
+                "responses": {
+                    "201": {
+                        "description": "Se Elimina el producto."
+                    },
+                    "200": {
+                        "description": "Hubo un problema en el request."
+                    }
+                }
+            }
+        },
+        "/api/v1/users": {
+            "get": {
+                "tags": [
+                    "User Module"
+                ],
                 "summary": "Mostrar usuarios",
                 "operationId": "App\\Http\\Controllers\\Api\\V1\\UserController::index",
                 "responses": {
                     "200": {
                         "description": "Mostrar todos los usuarios."
+                    },
+                    "default": {
+                        "description": "Ha ocurrido un error."
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "User Module"
+                ],
+                "summary": "Se crea un usuario",
+                "operationId": "App\\Http\\Controllers\\Api\\V1\\UserController::store",
+                "responses": {
+                    "200": {
+                        "description": "Creación de un usuario."
+                    },
+                    "default": {
+                        "description": "Ha ocurrido un error."
+                    }
+                }
+            }
+        },
+        "/api/v1/users/:id": {
+            "get": {
+                "tags": [
+                    "User Module"
+                ],
+                "summary": "Muestra un usuario por id",
+                "operationId": "App\\Http\\Controllers\\Api\\V1\\UserController::show",
+                "responses": {
+                    "200": {
+                        "description": "Mostrar un usuario."
+                    },
+                    "default": {
+                        "description": "Ha ocurrido un error."
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "User Module"
+                ],
+                "summary": "Actualizamos un usuario",
+                "operationId": "App\\Http\\Controllers\\Api\\V1\\UserController::update",
+                "responses": {
+                    "200": {
+                        "description": "Actualiza un usuario."
+                    },
+                    "default": {
+                        "description": "Ha ocurrido un error."
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "User Module"
+                ],
+                "summary": "Eliminamos un usuario por id",
+                "responses": {
+                    "200": {
+                        "description": "Elimina un usuario."
+                    },
+                    "default": {
+                        "description": "Ha ocurrido un error."
+                    }
+                }
+            }
+        },
+        "/api/signIn": {
+            "post": {
+                "tags": [
+                    "Auth Module"
+                ],
+                "summary": "Iniciar session con un usuario registrado",
+                "responses": {
+                    "200": {
+                        "description": "Authentication."
+                    },
+                    "default": {
+                        "description": "Ha ocurrido un error."
+                    }
+                }
+            }
+        },
+        "/api/signUp": {
+            "post": {
+                "tags": [
+                    "Auth Module"
+                ],
+                "summary": "Registro de un nuevo usuario",
+                "responses": {
+                    "200": {
+                        "description": "Registro de usuario."
                     },
                     "default": {
                         "description": "Ha ocurrido un error."

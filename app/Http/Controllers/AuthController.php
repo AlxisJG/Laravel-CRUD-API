@@ -16,6 +16,22 @@ class AuthController extends Controller
 {
 
     /**
+    * @OA\Post(
+    *     tags={"Auth Module"},
+    *     path="/api/signIn",
+    *     summary="Iniciar session con un usuario registrado",
+    *     @OA\Response(
+    *         response=200,
+    *         description="Authentication."
+    *     ),
+    *     @OA\Response(
+    *         response="default",
+    *         description="Ha ocurrido un error."
+    *     )
+    * )
+    */
+
+    /**
      * Se logea al usuario
      */
     public function signIn(Request $request)
@@ -48,6 +64,21 @@ class AuthController extends Controller
         }
     }
 
+    /**
+    * @OA\Post(
+    *     path="/api/signUp",
+    *     tags={"Auth Module"},
+    *     summary="Registro de un nuevo usuario",
+    *     @OA\Response(
+    *         response=200,
+    *         description="Registro de usuario."
+    *     ),
+    *     @OA\Response(
+    *         response="default",
+    *         description="Ha ocurrido un error."
+    *     )
+    * )
+    */
     /**
      * Se registra los usuarios
      */
