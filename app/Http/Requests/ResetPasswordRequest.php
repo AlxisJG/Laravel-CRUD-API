@@ -4,9 +4,8 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Validation\ValidationException;
 
-class FormUser extends FormRequest
+class ResetPasswordRequest extends FormRequest
 {
     public $errors = [];
 
@@ -51,22 +50,9 @@ class FormUser extends FormRequest
      */
     public function rules()
     {
-        if ($this->getMethod() == 'PUT') {
-            return [
-                'email' => 'unique:users|email:rfc',
-                'phone' => 'numeric',
-                'birth_date' => 'date',
-                'username' => 'unique:users',
-                'password' => 'string|confirmed'
-
-            ];
-        }
         return [
-            'name' => 'required',
-            'email' => 'required|unique:users|email:rfc',
-            'phone' => 'numeric',
-            'birth_date' => 'date',
-            'username' => 'required|unique:users',
+            'email' => 'required|email',
+            'token' => 'required|string',
             'password' => 'required|string|confirmed'
         ];
     }

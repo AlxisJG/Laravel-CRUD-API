@@ -1,17 +1,37 @@
 <?php
 
 namespace App\Http\Requests;
-
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 
 class FormItem extends FormRequest
 {
 
-    public function validateToUpdate()
+    public $errors = [];
+
+    /**
+     * Verifica si hay errores en la validacion
+     *
+     * @return bool
+     */
+    public function hasErrors()
     {
-        $this->validate([
-            'name' => 'string'
-        ]);
+        return (bool) $this->errors;
+    }
+
+    /**
+     * Devuelve un arreglo de errores
+     *
+     * @return Array $errors
+     */
+    public function getErrors()
+    {
+        return $this->errors;
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        $this->errors = $validator->errors()->getMessages();
     }
 
     /**
@@ -21,7 +41,7 @@ class FormItem extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -31,10 +51,15 @@ class FormItem extends FormRequest
      */
     public function rules()
     {
+        if ($this->getMethod() == 'PUT') {
+            return [
+                //
+            ];
+        }
         return [
             'name' => 'required',
-            'quantity' => 'required',
-            'price' => 'required'
+            'quantity' => 'required|numeric',
+            'price' => 'required|numeric'
         ];
     }
 }
