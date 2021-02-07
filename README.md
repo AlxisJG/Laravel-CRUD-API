@@ -15,6 +15,7 @@ En este proyecto veremos las siguientes características o features:
 - Instalación  vendors o dependencias con "composer install".
 - PHP artisan migrate (para crear la estructura de la BDD).
 - PHP artisan db:seed para crear algunos datos con que probar.
+- PHP artisan passport:install para generar las keys del access token
 
 ## License
 
