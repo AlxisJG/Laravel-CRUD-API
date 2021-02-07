@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\ApiCode;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\FormUser;
 use Illuminate\Http\Request;
@@ -57,7 +58,8 @@ class UserController extends Controller
         } catch (ModelNotFoundException $e) {
             return response()->json(['message' => 'No pudimos encontrar al usuario', 'success' => false], 404);
         } catch (\Exception $e) {
-            return response()->json($e->getMessage(), $e->getCode());
+            $code = ApiCode::SOMETHING_WENT_WRONG;
+            return response()->json($e->getMessage(), $code);
         }
     }
 
@@ -100,7 +102,7 @@ class UserController extends Controller
                 201
             );
         } catch (\Exception $e) {
-            $code = $e->getCode() ?? 402;
+            $code = ApiCode::SOMETHING_WENT_WRONG;
             return response()->json($e->getMessage(), $code);
         }
     }
@@ -139,7 +141,8 @@ class UserController extends Controller
         } catch (ModelNotFoundException $e) {
             return response()->json(['message' => 'No pudimos encontrar el user', 'success' => false], 404);
         } catch (\Exception $e) {
-            return response()->json($e->getMessage(), $e->getCode());
+            $code = ApiCode::SOMETHING_WENT_WRONG;
+            return response()->json($e->getMessage(), $code);
         }
     }
 
@@ -170,7 +173,8 @@ class UserController extends Controller
         } catch (ModelNotFoundException $e) {
             return response()->json(['message' => 'No pudimos encontrar al usuario', 'success' => false], 404);
         } catch (\Exception $e) {
-            return response()->json($e->getMessage(), $e->getCode());
+            $code = ApiCode::SOMETHING_WENT_WRONG;
+            return response()->json($e->getMessage(), $code);
         }
     }
 }

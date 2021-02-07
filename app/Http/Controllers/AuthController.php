@@ -59,7 +59,7 @@ class AuthController extends Controller
                 throw new \Exception('Unauthorized', 401);
             }
         } catch (\Exception $e) {
-            $code = $e->getCode() ?? 402;
+            $code = ApiCode::SOMETHING_WENT_WRONG;
             return response()->json($e->getMessage(), $code);
         }
     }
@@ -97,7 +97,7 @@ class AuthController extends Controller
             $user = new User($userRequest->all());
             $user->password = Hash::make($userRequest->input('password'));
             $user->save();
-            $user->sendEmailVerificationNotification();
+            #$user->sendEmailVerificationNotification();
             return response()->json(
                 [
                     'message' => 'Usuario creado.',
@@ -106,7 +106,7 @@ class AuthController extends Controller
                 201
             );
         } catch (\Exception $e) {
-            $code = $e->getCode() ?? 402;
+            $code = ApiCode::SOMETHING_WENT_WRONG;
             return response()->json($e->getMessage(), $code);
         }
     }
@@ -121,7 +121,15 @@ class AuthController extends Controller
     public function verify($user_id, Request $request)
     {
         if (!$request->hasValidSignature()) {
-            return $this->respondUnAuthorizedRequest(ApiCode::INVALID_EMAIL_VERIFICATION_URL);
+            return response()->json(
+                [
+                    'errors' => [
+                        'signature' => 'Tienes una firma invalida'
+                    ],
+                    'success' => false
+                ],
+                ApiCode::INVALID_EMAIL_VERIFICATION_URL
+            );
         }
 
         $user = User::findOrFail($user_id);
@@ -130,7 +138,7 @@ class AuthController extends Controller
             $user->markEmailAsVerified();
         }
 
-        return redirect()->to('/');
+        return response()->json(['message' => 'Cuenta verificada!', 'success' => true], 201);
     }
 
     public function forgot()

@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Http\Resources\ItemCollection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Item;
+use App\ApiCode;
 use Illuminate\Support\Facades\Storage;
 
 class ItemController extends Controller
@@ -82,7 +83,8 @@ class ItemController extends Controller
         } catch (ModelNotFoundException $e) {
             return response()->json(['message' => 'No pudimos encontrar el item', 'success' => false], 404);
         } catch (\Exception $e) {
-            return response()->json($e->getMessage(), $e->getCode());
+            $code = ApiCode::SOMETHING_WENT_WRONG;
+            return response()->json($e->getMessage(), $code);
         }
     }
 
@@ -125,7 +127,8 @@ class ItemController extends Controller
             $itemResult = new ItemResource($item);
             return response()->json(['data' => $itemResult, 'success' => true], 201);
         } catch (\Exception $e) {
-            return response()->json($e->getMessage(), $e->getCode());
+            $code = ApiCode::SOMETHING_WENT_WRONG;
+            return response()->json($e->getMessage(), $code);
         }
     }
 
@@ -171,7 +174,8 @@ class ItemController extends Controller
         } catch (ModelNotFoundException $e) {
             return response()->json(['message' => 'No pudimos encontrar el item', 'success' => false], 404);
         } catch (\Exception $e) {
-            return response()->json($e->getMessage(), $e->getCode());
+            $code = ApiCode::SOMETHING_WENT_WRONG;
+            return response()->json($e->getMessage(), $code);
         }
     }
 
@@ -202,7 +206,8 @@ class ItemController extends Controller
         } catch (ModelNotFoundException $e) {
             return response()->json(['message' => 'No pudimos encontrar el item', 'success' => false], 404);
         } catch (\Exception $e) {
-            return response()->json($e->getMessage(), $e->getCode());
+            $code = ApiCode::SOMETHING_WENT_WRONG;
+            return response()->json($e->getMessage(), $code);
         }
     }
 }

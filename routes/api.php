@@ -18,7 +18,7 @@ Route::post('sign-in', 'AuthController@signIn');
 Route::post('sign-up', 'AuthController@signUp');
 Route::post('password/email', 'AuthController@forgot')->name('password.email');
 Route::post('password/reset', 'AuthController@reset')->name('password.reset');
-Route::get('email/verify/{id}', 'AuthController@verify');
+#Route::get('verification/verify/{id}', 'AuthController@verify');
 
 Route::middleware(['auth:api'])->prefix('v1')->group(
     function () {
